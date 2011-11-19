@@ -41,7 +41,7 @@ sub config {
 
         $c->dbh->do(q{
             CREATE TABLE IF NOT EXISTS url (
-                key VARCHAR(25) NOT NULL PRIMARY KEY,
+                key VARCHAR(10) NOT NULL PRIMARY KEY,
                 url TEXT
             );
         });
