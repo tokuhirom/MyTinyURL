@@ -114,15 +114,6 @@ post '/api/create' => sub {
     );
 };
 
-# for your security
-__PACKAGE__->add_trigger(
-    AFTER_DISPATCH => sub {
-        my ( $c, $res ) = @_;
-        $res->header( 'X-Content-Type-Options' => 'nosniff' );
-        $res->header( 'X-Frame-Options' => 'DENY' );
-    },
-);
-
 # load plugins
 __PACKAGE__->load_plugin('DBI');
 
@@ -138,25 +129,8 @@ __DATA__
     <title>MyTinyURL</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+    <script type="text/javascript" src="[% uri_for('/static/js/main.js') %]"></script>
     <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
-    <script>
-        $(function () {
-            $('#TinyURLForm').submit(function () {
-                $('#Result').hide();
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/api/create',
-                    data: $(this).serialize()
-                }).success(function (res) {
-                    $('#Result').text("Result url is : " + res).show();
-                }).error(function (res) {
-                    alert("ERROR");
-                });
-                return false;
-            });
-        });
-    </script>
 </head>
 <body>
     <div class="container">
@@ -172,3 +146,22 @@ __DATA__
     </div>
 </body>
 </html>
+
+@@ /static/js/main.js
+$(function () {
+    $('#TinyURLForm').submit(function () {
+        $('#Result').hide();
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/create',
+            data: $(this).serialize()
+        }).success(function (res) {
+            $('#Result').text("Result url is : " + res).show();
+        }).error(function (res) {
+            alert("ERROR");
+        });
+        return false;
+    });
+});
+
