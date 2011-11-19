@@ -14,15 +14,15 @@ my $ua = LWP::UserAgent->new(max_redirect => 0);
 subtest 'normal' => sub {
     my $first_tiny = do {
         my $res = $ua->post('http://localhost/api/create?url=http://mixi.jp/');
-        is($res->code, 302) or diag($res->as_string);
-        like($res->header('Location'), qr{^http://[^/]+/t/[^/]+$});
-        $res->header('Location');
+        is($res->code, 200) or diag($res->as_string);
+        like($res->content, qr{^http://[^/]+/t/[^/]+$});
+        $res->content;
     };
     my $second_tiny = do {
         my $res = $ua->post('http://localhost/api/create?url=http://mixi.jp/');
-        is($res->code, 302);
-        like($res->header('Location'), qr{^http://[^/]+/t/[^/]+$});
-        $res->header('Location');
+        is($res->code, 200);
+        like($res->content, qr{^http://[^/]+/t/[^/]+$});
+        $res->content;
     };
     is($first_tiny, $second_tiny);
 

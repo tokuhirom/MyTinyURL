@@ -104,7 +104,14 @@ post '/api/create' => sub {
     my $key = MyTinyURL::Storage->find_or_create_key($c, $url);
 
     my $res_url = URI->new_abs($c->uri_for('/t/' . $key), $c->req->base);
-    return $c->request->header('x-requested-with') ? $c->create_response(200, ['Content-Type' => 'text/plain; charset=utf8'], $res_url) : $c->redirect($res_url);
+    return $c->create_response(
+        200,
+        [
+            'Content-Type'   => 'text/plain; charset=utf8',
+            'Content-Length' => length($res_url)
+        ],
+        $res_url
+    );
 };
 
 # for your security
